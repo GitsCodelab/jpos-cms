@@ -1,15 +1,47 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Layout, Button, Card, Typography, Tag, Space, Divider } from 'antd'
-import { ApiOutlined, CheckCircleOutlined, CloseCircleOutlined, LoadingOutlined } from '@ant-design/icons'
+import { ApiOutlined, CheckCircleOutlined, CloseCircleOutlined, LoadingOutlined, LogoutOutlined } from '@ant-design/icons'
 import api from './services/api'
+import Login from './pages/Login'
 
 const { Header, Content } = Layout
 const { Title, Text, Paragraph } = Typography
 
 export default function App() {
+  const [username, setUsername] = useState(localStorage.getItem('username'))
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('access_token'))
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+
+  useEffect(() => {
+    const handleAutoLogout = () => {
+      setIsAuthenticated(false)
+      setUsername(null)
+      setResult(null)
+      setError(null)
+    }
+    window.addEventListener('auth:logout', handleAutoLogout)
+    return () => window.removeEventListener('auth:logout', handleAutoLogout)
+  }, [])
+
+  const handleLoginSuccess = (nextUsername) => {
+    setUsername(nextUsername)
+    setIsAuthenticated(true)
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem('access_token')
+    localStorage.removeItem('username')
+    setIsAuthenticated(false)
+    setUsername(null)
+    setResult(null)
+    setError(null)
+  }
+
+  if (!isAuthenticated) {
+    return <Login onLoginSuccess={handleLoginSuccess} />
+  }
 
   const testPing = async () => {
     setLoading(true)
@@ -27,8 +59,12 @@ export default function App() {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Header style={{ background: '#0a6ed1', display: 'flex', alignItems: 'center', padding: '0 24px' }}>
+      <Header style={{ background: '#0a6ed1', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px' }}>
         <Title level={4} style={{ color: '#fff', margin: 0 }}>jPOS CMS</Title>
+        <Space>
+          <Tag>{username || 'admin'}</Tag>
+          <Button icon={<LogoutOutlined />} onClick={handleLogout}>Logout</Button>
+        </Space>
       </Header>
       <Content style={{ padding: 40 }}>
         <Card
