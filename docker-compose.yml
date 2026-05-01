@@ -1,0 +1,40 @@
+services:
+
+  jpos-cms-backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: jpos-cms-backend
+    env_file:
+      - ./backend/.env
+    environment:
+      # Override localhost with Docker service names for container networking
+      POSTGRES_HOST: jpos-postgresql
+    ports:
+      - "8002:8000"
+    networks:
+      - jpos-cms-net
+  
+  jpos-cms-frontend:
+    image: node:18-alpine
+    container_name: jpos-cms-frontend
+    working_dir: /app
+    command: sh -c "npm install && npm run dev"
+    depends_on:
+      jpos-cms-backend:
+        condition: service_started
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "3001:3000"
+      - "5174:5173"
+    networks:
+      - jpos-cms-net
+
+volumes:
+  postgres-data:
+
+networks:
+  jpos-cms-net:
+    driver: bridge
