@@ -15,7 +15,8 @@
     "antd": "5.10.0",
     "@ant-design/icons": "5.2.6",
     "recharts": "2.10.3",
-    "axios": "1.6.0"
+    "axios": "1.6.0",
+    "react-router-dom": "6.20.1"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "4.2.0",

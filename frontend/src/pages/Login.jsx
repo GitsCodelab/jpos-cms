@@ -13,12 +13,19 @@ export default function Login({ onLoginSuccess }) {
     setLoading(true)
     setError('')
     try {
-      const res = await authAPI.login(values.username, values.password)
-      localStorage.setItem('access_token', res.data.access_token)
-      localStorage.setItem('username', res.data.username)
-      onLoginSuccess(res.data.username)
+      const response = await authAPI.login(values.username, values.password)
+      const { access_token, user } = response.data
+      
+      // Store token and user info in localStorage
+      localStorage.setItem('access_token', access_token)
+      localStorage.setItem('user', JSON.stringify(user))
+      
+      // Call success callback
+      onLoginSuccess(user.username)
     } catch (err) {
-      setError(err?.response?.data?.detail || 'Login failed')
+      const errorMessage = err?.response?.data?.detail || 'Login failed'
+      setError(errorMessage)
+      console.error('Login error:', err)
     } finally {
       setLoading(false)
     }

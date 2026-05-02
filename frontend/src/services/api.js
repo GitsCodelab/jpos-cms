@@ -18,7 +18,7 @@ api.interceptors.response.use(
   (error) => {
     if (error?.response?.status === 401) {
       localStorage.removeItem('access_token')
-      localStorage.removeItem('username')
+      localStorage.removeItem('user')
       window.dispatchEvent(new Event('auth:logout'))
     }
     return Promise.reject(error)
@@ -27,6 +27,12 @@ api.interceptors.response.use(
 
 export const authAPI = {
   login: (username, password) => api.post('/auth/login', { username, password }),
+  logout: () => api.post('/auth/logout'),
+  getCurrentUser: () => api.get('/auth/me'),
+  changePassword: (old_password, new_password) =>
+    api.post('/auth/change-password', { old_password, new_password }),
+  getActiveSessions: () => api.get('/auth/sessions'),
+  revokeAllSessions: () => api.post('/auth/revoke-all-sessions'),
 }
 
 export default api

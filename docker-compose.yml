@@ -8,8 +8,9 @@ services:
     env_file:
       - ./backend/.env
     environment:
-      # Override localhost with Docker service names for container networking
-      POSTGRES_HOST: jpos-postgresql
+      DATABASE_URL: sqlite:////app/jpos_cms.db
+    volumes:
+      - ./backend:/app
     ports:
       - "8002:8000"
     networks:

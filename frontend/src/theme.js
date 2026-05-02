@@ -39,7 +39,15 @@ export const ui5Theme = {
     },
     Menu: {
       fontSize: 12,
-      itemHeight: 32,
+      itemHeight: 30,
+      itemSelectedBg: '#e6f4ff',
+      itemSelectedColor: '#0a6ed1',
+      itemHoverBg: '#f0f6ff',
+      itemHoverColor: '#0a6ed1',
+      subMenuItemBg: '#fafafa',
+      groupTitleColor: '#73879c',
+      groupTitleFontSize: 11,
+      itemPaddingInline: 12,
     },
   },
 };
