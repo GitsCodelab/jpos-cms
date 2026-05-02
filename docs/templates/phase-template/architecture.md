@@ -1,18 +1,25 @@
-# Architecture
+# Phase Architecture Template
 
-## Flow
+Phase: <name>
+Last updated: <yyyy-mm-dd>
 
-Client
-  ↓
-API
-  ↓
-Service
-  ↓
-Database / External System
+## Scope
+- <in scope>
+- <out of scope>
 
-## Components
-- Component A
-- Component B
+## Components Affected
+- backend:
+- frontend:
+- data model:
 
-## Notes
-Important architectural decisions.
+## Design
+- <high-level design>
+
+## Data Flow
+1. <step>
+2. <step>
+
+## Non-Functional Considerations
+- security:
+- performance:
+- compatibility:

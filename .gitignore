@@ -16,4 +16,10 @@ dist/
 *.cer
 
 # Logs
+backend/jpos_cms.db
 *.log
+
+frontend/node_modules
+frontend/dist
+backend/__pycache__
+*.pyc

@@ -1,12 +1,24 @@
-# UI
+# Phase UI Template
 
-## Pages
-- Page A
-- Page B
+Phase: <name>
+Last updated: <yyyy-mm-dd>
 
-## Components
-- Component A
-- Component B
+## UI Scope
+- pages/components:
+- routes:
 
-## Notes
-Important UI behavior.
+## States
+- loading:
+- empty:
+- error:
+
+## Interactions
+- <interaction details>
+
+## Accessibility
+- keyboard:
+- labels:
+- color contrast:
+
+## Validation
+- <how to validate in browser>

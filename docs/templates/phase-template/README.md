@@ -1,17 +1,15 @@
-# Phase Name
+# Phase Template Usage Guide
 
-## Overview
-Short description of the phase.
+Use this template folder when creating a new implementation phase document set.
 
-## Goals
-- Goal 1
-- Goal 2
+Files:
+- `tasks.md` - actionable checklist and status
+- `architecture.md` - design and component boundaries
+- `api.md` - endpoint contract changes
+- `ui.md` - frontend scope and UX behavior
+- `decisions.md` - tradeoffs and accepted decisions
 
-## Backend
-Describe backend responsibilities.
-
-## Frontend
-Describe frontend responsibilities.
-
-## Current Status
-Planned / In Progress / Stable
+Template principles:
+- separate implemented vs planned
+- keep status explicit
+- include risks and rollback notes for impactful changes

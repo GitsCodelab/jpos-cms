@@ -1,10 +1,24 @@
-# Tasks
+# Phase Tasks Template
 
-## Planned
-- [ ]
+Phase: <name>
+Owner: <team/person>
+Status: Planned | In Progress | Complete
+Last updated: <yyyy-mm-dd>
 
-## In Progress
-- [ ]
+## Goals
+- <goal 1>
+- <goal 2>
 
-## Done
-- [ ]
+## Checklist
+- [ ] implementation item
+- [ ] tests item
+- [ ] docs item
+
+## Verification
+- <how to verify>
+
+## Risks
+- <risk>
+
+## Rollback
+- <rollback strategy>

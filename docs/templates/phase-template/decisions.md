@@ -1,4 +1,18 @@
-# Decisions
+# Phase Decisions Template
 
-- Decision 1
-- Decision 2
+Phase: <name>
+Last updated: <yyyy-mm-dd>
+
+## Accepted Decisions
+1. Decision:
+   - context:
+   - options considered:
+   - selected option:
+   - consequences:
+
+## Rejected Alternatives
+- alternative:
+  - reason rejected:
+
+## Open Questions
+- <question>
