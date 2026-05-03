@@ -692,3 +692,116 @@ class MenuItemStatusResponse(BaseModel):
         from_attributes = True
 
 
+# ============================================================================
+# CUSTOMER SCHEMAS — Phase 05 (read from external business DB)
+# ============================================================================
+
+from datetime import date as _date
+from decimal import Decimal
+
+
+class CustomerSearchResult(BaseModel):
+    """Single row in customer search results — no sensitive fields."""
+    id: str
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    national_id: Optional[str] = None
+    mobile: Optional[str] = None
+    email: Optional[str] = None
+    status: Optional[str] = None
+    segment: Optional[str] = None
+    branch_id: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+
+
+class CustomerSearchResponse(BaseModel):
+    """Paginated customer search response."""
+    items: List[CustomerSearchResult]
+    total: Optional[int] = None     # None on page > 1 (no recount)
+    page: int
+    page_size: int
+    pages: Optional[int] = None
+
+
+class CustomerDetailResponse(BaseModel):
+    """Full customer detail — returned by GET /customers/{id}."""
+    id: str
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    national_id: Optional[str] = None
+    mobile: Optional[str] = None
+    email: Optional[str] = None
+    status: Optional[str] = None
+    segment: Optional[str] = None
+    branch_id: Optional[str] = None
+    created_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+
+
+class CustomerContractResponse(BaseModel):
+    id: str
+    customer_id: str
+    contract_number: Optional[str] = None
+    product_type: Optional[str] = None
+    contract_type_desc: Optional[str] = None
+    status: Optional[str] = None
+    open_date: Optional[datetime] = None
+    close_date: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+
+
+class CustomerCardResponse(BaseModel):
+    """Card info — full PAN returned only when caller requests and has permission."""
+    id: str
+    customer_id: str
+    card_number_masked: Optional[str] = None   # e.g. ****-****-****-1234
+    card_number_clear: Optional[str] = None    # Full PAN — only set for admin/operator with include_pan=true
+    card_type: Optional[str] = None
+    status: Optional[str] = None
+    expiry_date: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+
+
+class CustomerAccountResponse(BaseModel):
+    """Account info — balance omitted for viewer role."""
+    id: str
+    customer_id: str
+    account_number: Optional[str] = None
+    currency: Optional[str] = None
+    balance: Optional[Decimal] = None          # None when caller lacks permission
+    status: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+
+
+class CustomerDocumentResponse(BaseModel):
+    id: str
+    customer_id: str
+    document_type: Optional[str] = None
+    document_number: Optional[str] = None
+    issue_date: Optional[_date] = None
+    expiry_date: Optional[_date] = None
+
+    class Config:
+        from_attributes = True
+
+
+class CustomerContactResponse(BaseModel):
+    id: str
+    customer_id: str
+    contact_type: Optional[str] = None
+    contact_value: Optional[str] = None
+    is_primary: Optional[bool] = None
+
+    class Config:
+        from_attributes = True
+

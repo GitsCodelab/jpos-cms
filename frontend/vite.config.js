@@ -6,6 +6,10 @@ export default defineConfig({
   server: {
     port: 5173,
     host: true,
+    watch: {
+      usePolling: true,   // required for HMR inside Docker on Linux
+      interval: 500,
+    },
     proxy: {
       '/api': {
         target: 'http://jpos-cms-backend:8000',

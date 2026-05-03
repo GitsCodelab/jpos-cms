@@ -10,6 +10,7 @@ from app.db import init_db
 from app.security import access_token_ttl_seconds, authenticate_user, create_access_token, require_jwt_token
 from app.routers import auth, transactions, reconciliation, fraud, settlement, net, dashboard, config
 from app.routers import menu as menu_router
+from app.routers import customer as customer_router
 from app.seed.menu_seed import seed_menu_profiles
 
 API_TITLE = os.getenv("API_TITLE", "jPOS CMS API")
@@ -54,6 +55,7 @@ app.include_router(net.router)
 app.include_router(dashboard.router)
 app.include_router(config.router)
 app.include_router(menu_router.router)
+app.include_router(customer_router.router)
 
 
 @app.get("/health")

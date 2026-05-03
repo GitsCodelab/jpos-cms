@@ -1,5 +1,10 @@
 /* SAP UI5 / Fiori Inspired Styling */
-
+.ant-modal-content{
+  height: 100%!important;
+}
+.ant-modal{
+ height: 100%!important;
+}
 * {
   margin: 0;
   padding: 0;

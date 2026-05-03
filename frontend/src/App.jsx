@@ -6,6 +6,8 @@ import PlaceholderPage from './pages/PlaceholderPage'
 import DatabaseConnections from './pages/DatabaseConnections'
 import MenuProfiles from './pages/MenuProfiles'
 import MenuItems from './pages/MenuItems'
+import Customers from './pages/Customers'
+import CustomerDetail from './pages/CustomerDetail'
 import { MenuProvider } from './store/MenuContext'
 
 export default function App() {
@@ -45,6 +47,10 @@ export default function App() {
 
           {/* Configuration — Menu Items */}
           <Route path="configuration/menu-items" element={<MenuItems />} />
+
+          {/* Customer Management — Phase 05 */}
+          <Route path="customers" element={<Customers />} />
+          <Route path="customers/:id" element={<CustomerDetail />} />
 
           {/* All sections render the placeholder until each page is implemented */}
           <Route path="*" element={<PlaceholderPage />} />
