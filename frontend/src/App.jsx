@@ -4,6 +4,9 @@ import Login from './pages/Login'
 import MainLayout from './components/MainLayout'
 import PlaceholderPage from './pages/PlaceholderPage'
 import DatabaseConnections from './pages/DatabaseConnections'
+import MenuProfiles from './pages/MenuProfiles'
+import MenuItems from './pages/MenuItems'
+import { MenuProvider } from './store/MenuContext'
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('access_token'))
@@ -28,17 +31,25 @@ export default function App() {
   }
 
   return (
-    <Routes>
-      <Route path="/" element={<MainLayout onLogout={handleLogout} />}>
-        {/* Default redirect to Monitoring › Notifications */}
-        <Route index element={<Navigate to="/monitoring/notifications" replace />} />
+    <MenuProvider>
+      <Routes>
+        <Route path="/" element={<MainLayout onLogout={handleLogout} />}>
+          {/* Default redirect to Monitoring › Notifications */}
+          <Route index element={<Navigate to="/monitoring/notifications" replace />} />
 
-        {/* Configuration — Database Connections */}
-        <Route path="configuration/database-connections" element={<DatabaseConnections />} />
+          {/* Configuration — Database Connections */}
+          <Route path="configuration/database-connections" element={<DatabaseConnections />} />
 
-        {/* All sections render the placeholder until each page is implemented */}
-        <Route path="*" element={<PlaceholderPage />} />
-      </Route>
-    </Routes>
+          {/* Configuration — Menu Profiles */}
+          <Route path="configuration/menu-profiles" element={<MenuProfiles />} />
+
+          {/* Configuration — Menu Items */}
+          <Route path="configuration/menu-items" element={<MenuItems />} />
+
+          {/* All sections render the placeholder until each page is implemented */}
+          <Route path="*" element={<PlaceholderPage />} />
+        </Route>
+      </Routes>
+    </MenuProvider>
   )
 }

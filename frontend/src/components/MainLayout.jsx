@@ -8,6 +8,7 @@ import {
 } from '@ant-design/icons'
 import { Outlet, useNavigate } from 'react-router-dom'
 import Sidebar from './Sidebar'
+import { useMenu } from '../store/MenuContext'
 
 const { Header, Content } = Layout
 const { Text } = Typography
@@ -30,6 +31,7 @@ export default function MainLayout({ onLogout }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const navigate = useNavigate()
   const user = getUserFromStorage()
+  const { currentMenu } = useMenu()
 
   const userMenuItems = [
     {
@@ -126,7 +128,11 @@ export default function MainLayout({ onLogout }) {
 
       {/* ── Body: Sidebar + Content ─────────────────────────────── */}
       <Layout style={{ height: 'calc(100vh - 44px)', minHeight: 0 }}>
-        <Sidebar collapsed={sidebarCollapsed} onCollapse={setSidebarCollapsed} />
+        <Sidebar
+          collapsed={sidebarCollapsed}
+          onCollapse={setSidebarCollapsed}
+          menuData={currentMenu?.menus}
+        />
 
         <Content
           style={{

@@ -9,6 +9,7 @@ All models include:
 - Composite indexes defined in database layer
 """
 
+import uuid
 from datetime import datetime
 from enum import Enum as PyEnum
 
@@ -23,8 +24,9 @@ from sqlalchemy import (
     String,
     Text,
     Boolean,
+    UniqueConstraint,
 )
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 
 from app.db import Base
 
@@ -657,3 +659,130 @@ class DatabaseConnection(Base):
 
     def __repr__(self):
         return f"<DatabaseConnection name={self.connection_name} type={self.database_type}>"
+
+
+# ============================================================================
+# MENU PROFILE MODELS
+# ============================================================================
+
+
+class MenuProfile(Base):
+    """
+    Menu layout profile definition.
+
+    Predefined profiles control which menu items appear in the sidebar.
+    Only one profile can be the system default.
+    Users can select their preferred profile.
+    """
+    __tablename__ = "menu_profiles"
+
+    id = Column(String(50), primary_key=True, default=lambda: str(uuid.uuid4()))
+    name = Column(String(100), unique=True, nullable=False)          # e.g. 'standard'
+    display_name = Column(String(200), nullable=False)               # e.g. 'Standard'
+    description = Column(Text)
+    is_default = Column(Boolean, default=False, nullable=False)      # exactly one default
+    is_active = Column(Boolean, default=True, nullable=False)
+
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    profile_menu_items = relationship(
+        "ProfileMenuItem", back_populates="profile", cascade="all, delete-orphan"
+    )
+    user_profiles = relationship("UserMenuProfile", back_populates="profile")
+
+    __table_args__ = (
+        Index("idx_menu_profiles_name", "name"),
+        Index("idx_menu_profiles_default", "is_default"),
+    )
+
+    def __repr__(self):
+        return f"<MenuProfile name={self.name} default={self.is_default}>"
+
+
+class MenuItem(Base):
+    """
+    Individual menu item in the navigation tree.
+
+    Supports arbitrary depth via self-referential parent_id.
+    Group items (is_group=True) have children but no route.
+    Leaf items start with '/' and represent actual routes.
+    icon_name stores the Ant Design icon component name as a string.
+    """
+    __tablename__ = "menu_items"
+
+    id = Column(String(50), primary_key=True, default=lambda: str(uuid.uuid4()))
+    key = Column(String(200), unique=True, nullable=False)           # route key e.g. '/issuing/cards'
+    label = Column(String(200), nullable=False)
+    icon_name = Column(String(100))                                  # e.g. 'CreditCardOutlined'
+    permission = Column(String(200))
+    parent_id = Column(String(50), ForeignKey("menu_items.id"), nullable=True)
+    order_index = Column(Integer, default=0, nullable=False)
+    is_group = Column(Boolean, default=False, nullable=False)        # True if has children
+    is_active = Column(Boolean, default=True, nullable=False)        # Soft-disable without deleting
+
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    children = relationship(
+        "MenuItem",
+        foreign_keys=[parent_id],
+        backref=backref("parent", remote_side="MenuItem.id"),
+        order_by="MenuItem.order_index",
+    )
+    profile_menu_items = relationship("ProfileMenuItem", back_populates="menu_item")
+
+    __table_args__ = (
+        Index("idx_menu_items_key", "key"),
+        Index("idx_menu_items_parent", "parent_id"),
+    )
+
+    def __repr__(self):
+        return f"<MenuItem key={self.key} label={self.label}>"
+
+
+class ProfileMenuItem(Base):
+    """
+    Association between a MenuProfile and a top-level MenuItem.
+
+    Only top-level items (parent_id=None) are linked directly to profiles.
+    Child items are reached through the MenuItem tree.
+    """
+    __tablename__ = "profile_menu_items"
+
+    id = Column(String(50), primary_key=True, default=lambda: str(uuid.uuid4()))
+    profile_id = Column(String(50), ForeignKey("menu_profiles.id"), nullable=False)
+    menu_item_id = Column(String(50), ForeignKey("menu_items.id"), nullable=False)
+    order_index = Column(Integer, default=0, nullable=False)
+
+    profile = relationship("MenuProfile", back_populates="profile_menu_items")
+    menu_item = relationship("MenuItem", back_populates="profile_menu_items")
+
+    __table_args__ = (
+        UniqueConstraint("profile_id", "menu_item_id", name="uq_profile_menu_item"),
+        Index("idx_profile_menu_items_profile", "profile_id"),
+    )
+
+
+class UserMenuProfile(Base):
+    """
+    Records which MenuProfile a specific user has selected.
+
+    One row per user. Missing row means user gets the default profile.
+    """
+    __tablename__ = "user_menu_profiles"
+
+    id = Column(String(50), primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(String(50), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, unique=True)
+    profile_id = Column(String(50), ForeignKey("menu_profiles.id"), nullable=False)
+
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    user = relationship("User")
+    profile = relationship("MenuProfile", back_populates="user_profiles")
+
+    __table_args__ = (
+        Index("idx_user_menu_profiles_user", "user_id"),
+    )
+

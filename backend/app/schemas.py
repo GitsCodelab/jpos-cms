@@ -581,3 +581,114 @@ class PaginatedDatabaseConnections(BaseModel):
     pages: int
 
 
+# ============================================================================
+# MENU PROFILE SCHEMAS
+# ============================================================================
+
+
+class MenuItemResponse(BaseModel):
+    """Single menu item (potentially nested) returned to the frontend."""
+    id: str
+    key: str
+    label: str
+    icon_name: Optional[str] = None
+    permission: Optional[str] = None
+    order_index: int
+    is_group: bool
+    children: List["MenuItemResponse"] = []
+
+    class Config:
+        from_attributes = True
+
+
+# Enable self-referential model
+MenuItemResponse.model_rebuild()
+
+
+class MenuProfileResponse(BaseModel):
+    """Menu profile metadata returned to the frontend."""
+    id: str
+    name: str
+    display_name: str
+    description: Optional[str] = None
+    is_default: bool
+    is_active: bool
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class MenuProfileWithMenusResponse(MenuProfileResponse):
+    """Menu profile with its full menu tree."""
+    menus: List[MenuItemResponse] = []
+
+
+class UserMenuProfileSelectRequest(BaseModel):
+    """Request to assign a menu profile to the current user."""
+    profile_id: str = Field(..., min_length=1)
+
+
+class UserMenuProfileResponse(BaseModel):
+    """Current user's assigned menu profile."""
+    user_id: str
+    profile: MenuProfileResponse
+
+    class Config:
+        from_attributes = True
+
+
+# ============================================================================
+# MENU ADMIN SCHEMAS
+# ============================================================================
+
+
+class MenuItemAdminResponse(BaseModel):
+    """Top-level menu item for admin management (flat, no children)."""
+    id: str
+    key: str
+    label: str
+    icon_name: Optional[str] = None
+    permission: Optional[str] = None
+    order_index: int
+    is_group: bool
+    is_active: bool
+    parent_id: Optional[str] = None
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class MenuItemCreate(BaseModel):
+    """Request to create a new top-level menu item."""
+    key: str = Field(..., min_length=1, max_length=200)
+    label: str = Field(..., min_length=1, max_length=200)
+    icon_name: Optional[str] = Field(None, max_length=100)
+    permission: Optional[str] = Field(None, max_length=200)
+    order_index: int = Field(default=0, ge=0)
+    is_group: bool = False
+
+
+class MenuProfileStatusResponse(BaseModel):
+    """Minimal response after activating / deactivating a profile."""
+    id: str
+    name: str
+    display_name: str
+    is_active: bool
+
+    class Config:
+        from_attributes = True
+
+
+class MenuItemStatusResponse(BaseModel):
+    """Minimal response after activating / deactivating a menu item."""
+    id: str
+    key: str
+    label: str
+    is_active: bool
+
+    class Config:
+        from_attributes = True
+
+

@@ -84,7 +84,7 @@ const menuConfig = [
     permission: 'issuing',
     children: [
       { key: '/customers', label: 'Customers', icon: <TeamOutlined />, permission: 'customers.list' },
-      { key: '/issuing/hierarchy',             label: 'Hierarchy',             icon: <ApartmentOutlined />,  permission: 'issuing.hierarchy' },
+      
       { key: '/issuing/accounts',              label: 'Accounts',              icon: <BankOutlined />,       permission: 'issuing.accounts' },
       { key: '/issuing/cards',                 label: 'Cards',                 icon: <CreditCardOutlined />, permission: 'issuing.cards' },
       { key: '/issuing/cardholders',           label: 'Cardholders',           icon: <IdcardOutlined />,     permission: 'issuing.cardholders' },
@@ -139,7 +139,7 @@ const menuConfig = [
     icon: <ShopOutlined />,
     permission: 'acquiring',
     children: [
-      { key: '/acquiring/hierarchy',          label: 'Hierarchy',          icon: <ApartmentOutlined />, permission: 'acquiring.hierarchy' },
+      
       { key: '/acquiring/accounts',           label: 'Accounts',           icon: <BankOutlined />,      permission: 'acquiring.accounts' },
       { key: '/acquiring/merchants',          label: 'Merchants',          icon: <ShopOutlined />,      permission: 'acquiring.merchants' },
       { key: '/acquiring/terminals',          label: 'Terminals',          icon: <DesktopOutlined />,   permission: 'acquiring.terminals' },
@@ -359,6 +359,7 @@ const menuConfig = [
       { key: '/configuration/reporting',     label: 'Reporting',     icon: <BarChartOutlined />,       permission: 'configuration.reporting' },
       { key: '/configuration/scoring',       label: 'Scoring',       icon: <FundOutlined />,           permission: 'configuration.scoring' },
       { key: '/configuration/database-connections', label: 'Database Connections', icon: <DatabaseOutlined />, permission: 'configuration.database_connections' },
+      { key: '/configuration/menu-profiles',        label: 'Menu Profiles',        icon: <AppstoreOutlined />, permission: 'configuration.menu_profiles' },
       {
         key: 'configuration-directory',
         label: 'Directory',

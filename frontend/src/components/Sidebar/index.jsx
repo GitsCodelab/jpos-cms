@@ -11,6 +11,26 @@ import {
 } from '@ant-design/icons'
 import { useNavigate, useLocation } from 'react-router-dom'
 import menuConfig, { flattenMenuItems, findAncestorKeys } from '../../config/menuConfig'
+import { getIcon } from '../../config/iconMap'
+
+/**
+ * Normalize backend menu items (icon_name: string) to the shape expected
+ * by buildAntMenuItems (icon: ReactElement).
+ */
+const normalizeMenuData = (items) =>
+  items.map((item) => ({
+    ...item,
+    icon: item.icon_name ? getIcon(item.icon_name) : null,
+    children: item.children ? normalizeMenuData(item.children) : [],
+  }))
+
+/**
+ * Recursively flatten a menu item array into leaf items only.
+ */
+const flattenItems = (items) =>
+  items.flatMap((item) =>
+    item.children && item.children.length > 0 ? flattenItems(item.children) : [item],
+  )
 
 const { Sider } = Layout
 const { Text } = Typography
@@ -72,16 +92,25 @@ const buildAntMenuItems = (items, onToggleBookmark, bookmarkedKeys, hideBookmark
     }
   })
 
-export default function Sidebar({ collapsed, onCollapse }) {
+export default function Sidebar({ collapsed, onCollapse, menuData }) {
   const navigate = useNavigate()
   const location = useLocation()
+
+  // Resolve menu source: dynamic (from backend) or static fallback
+  const resolvedMenu = useMemo(
+    () => (menuData && menuData.length > 0 ? normalizeMenuData(menuData) : menuConfig),
+    [menuData],
+  )
 
   const [activeTab, setActiveTab] = useState('menu')
   const [searchQuery, setSearchQuery] = useState('')
   const [bookmarkedKeys, setBookmarkedKeys] = useState(loadBookmarks)
-  const [openKeys, setOpenKeys] = useState(() => findAncestorKeys(menuConfig, location.pathname) || [])
+  const [openKeys, setOpenKeys] = useState(() => findAncestorKeys(resolvedMenu, location.pathname) || [])
 
-  const allLeafItems = useMemo(() => flattenMenuItems(), [])
+  const allLeafItems = useMemo(
+    () => (menuData && menuData.length > 0 ? flattenItems(normalizeMenuData(menuData)) : flattenMenuItems()),
+    [menuData],
+  )
 
   const toggleBookmark = useCallback((key) => {
     setBookmarkedKeys((prev) => {
@@ -93,14 +122,14 @@ export default function Sidebar({ collapsed, onCollapse }) {
 
   // Full menu items (with bookmark toggles)
   const menuItems = useMemo(
-    () => buildAntMenuItems(menuConfig, toggleBookmark, bookmarkedKeys),
-    [bookmarkedKeys, toggleBookmark],
+    () => buildAntMenuItems(resolvedMenu, toggleBookmark, bookmarkedKeys),
+    [resolvedMenu, bookmarkedKeys, toggleBookmark],
   )
 
   // Collapsed icon-only menu – no bookmark star (no room)
   const collapsedMenuItems = useMemo(
-    () => buildAntMenuItems(menuConfig, toggleBookmark, bookmarkedKeys, true),
-    [bookmarkedKeys, toggleBookmark],
+    () => buildAntMenuItems(resolvedMenu, toggleBookmark, bookmarkedKeys, true),
+    [resolvedMenu, bookmarkedKeys, toggleBookmark],
   )
 
   const filteredSearchItems = useMemo(() => {
