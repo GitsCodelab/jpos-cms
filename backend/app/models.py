@@ -602,3 +602,58 @@ class TokenBlacklist(Base):
         Index("idx_token_blacklist_username", "username"),
         Index("idx_token_blacklist_expires", "token_expires_at"),
     )
+
+
+# ============================================================================
+# DATABASE CONNECTIONS MODEL
+# ============================================================================
+
+
+class DatabaseConnectionType(str, PyEnum):
+    """Supported external database types"""
+    ORACLE = "ORACLE"
+    POSTGRESQL = "POSTGRESQL"
+
+
+class DatabaseConnection(Base):
+    """
+    External database connection configuration.
+
+    Stores connection details for Oracle and PostgreSQL databases used by:
+    - reconciliation services
+    - reporting services
+    - fraud monitoring queries
+    - operational dashboards
+
+    Passwords are stored encrypted (Fernet symmetric encryption).
+    """
+    __tablename__ = "database_connections"
+
+    id = Column(String(50), primary_key=True)  # UUID
+    connection_name = Column(String(100), nullable=False, unique=True)
+    database_type = Column(Enum(DatabaseConnectionType), nullable=False)
+
+    # Connection parameters
+    host = Column(String(255), nullable=False)
+    port = Column(Integer, nullable=False)
+    service_name = Column(String(100), nullable=False)  # database name or Oracle service name
+    username = Column(String(100), nullable=False)
+    encrypted_password = Column(Text, nullable=False)  # Fernet-encrypted
+    schema_name = Column(String(100))
+
+    # Metadata
+    description = Column(Text)
+    is_active = Column(Boolean, default=True, nullable=False)
+
+    # Timestamps
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    __table_args__ = (
+        Index("idx_db_connections_name", "connection_name"),
+        Index("idx_db_connections_type", "database_type"),
+        Index("idx_db_connections_active", "is_active"),
+    )
+
+    def __repr__(self):
+        return f"<DatabaseConnection name={self.connection_name} type={self.database_type}>"

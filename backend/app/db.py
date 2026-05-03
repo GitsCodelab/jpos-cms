@@ -31,13 +31,6 @@ if ORACLE_MODE:
         pool_recycle=3600,
         echo=os.getenv("SQL_ECHO", "false").lower() == "true",
     )
-elif DATABASE_URL.startswith("sqlite"):
-    # SQLite — no pool size settings
-    engine = create_engine(
-        DATABASE_URL,
-        connect_args={"check_same_thread": False},
-        echo=os.getenv("SQL_ECHO", "false").lower() == "true",
-    )
 else:
     # PostgreSQL configuration
     engine = create_engine(

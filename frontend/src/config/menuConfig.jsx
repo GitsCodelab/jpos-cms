@@ -74,17 +74,7 @@ import {
  *   children   – optional nested items array
  */
 const menuConfig = [
-  // ── Customers ──────────────────────────────────────────────────
-  {
-    key: 'customers',
-    label: 'Customers',
-    icon: <UserOutlined />,
-    permission: 'customers',
-    children: [
-      { key: '/customers', label: 'Customers', icon: <TeamOutlined />, permission: 'customers.list' },
-      { key: '/customers/contracts', label: 'Contracts', icon: <FileTextOutlined />, permission: 'customers.contracts' },
-    ],
-  },
+
 
   // ── Issuing ────────────────────────────────────────────────────
   {
@@ -93,6 +83,7 @@ const menuConfig = [
     icon: <CreditCardOutlined />,
     permission: 'issuing',
     children: [
+      { key: '/customers', label: 'Customers', icon: <TeamOutlined />, permission: 'customers.list' },
       { key: '/issuing/hierarchy',             label: 'Hierarchy',             icon: <ApartmentOutlined />,  permission: 'issuing.hierarchy' },
       { key: '/issuing/accounts',              label: 'Accounts',              icon: <BankOutlined />,       permission: 'issuing.accounts' },
       { key: '/issuing/cards',                 label: 'Cards',                 icon: <CreditCardOutlined />, permission: 'issuing.cards' },
@@ -102,15 +93,6 @@ const menuConfig = [
       { key: '/issuing/operational-requests',  label: 'Operational requests',  icon: <FormOutlined />,       permission: 'issuing.operational_requests' },
       { key: '/issuing/dispute-operations',    label: 'Dispute operations',    icon: <ExceptionOutlined />,  permission: 'issuing.dispute_operations' },
       { key: '/issuing/applications',          label: 'Applications',          icon: <ContainerOutlined />,  permission: 'issuing.applications' },
-      {
-        key: 'issuing-personalization',
-        label: 'Personalization',
-        icon: <SettingOutlined />,
-        permission: 'issuing.personalization',
-        children: [
-          { key: '/issuing/personalization/configuration', label: 'Configuration', icon: <SettingOutlined />, permission: 'issuing.personalization.configuration' },
-        ],
-      },
       {
         key: 'issuing-credit',
         label: 'Credit',
@@ -244,16 +226,7 @@ const menuConfig = [
     ],
   },
 
-  // ── Custom ─────────────────────────────────────────────────────
-  {
-    key: 'custom',
-    label: 'Custom',
-    icon: <AppstoreOutlined />,
-    permission: 'custom',
-    children: [
-      { key: '/custom/applications', label: 'Applications', icon: <ContainerOutlined />, permission: 'custom.applications' },
-    ],
-  },
+
 
   // ── Monitoring ─────────────────────────────────────────────────
   {
@@ -308,27 +281,7 @@ const menuConfig = [
     ],
   },
 
-  // ── Instant Payments ───────────────────────────────────────────
-  {
-    key: 'instant-payments',
-    label: 'Instant Payments',
-    icon: <ThunderboltOutlined />,
-    permission: 'instant_payments',
-    children: [
-      { key: '/instant-payments/operations', label: 'Operations', icon: <ToolOutlined />, permission: 'instant_payments.operations' },
-    ],
-  },
 
-  // ── Survey ─────────────────────────────────────────────────────
-  {
-    key: 'survey',
-    label: 'Survey',
-    icon: <QuestionCircleOutlined />,
-    permission: 'survey',
-    children: [
-      { key: '/survey', label: 'Survey', icon: <QuestionCircleOutlined />, permission: 'survey.list' },
-    ],
-  },
 
   // ── Campaigns ──────────────────────────────────────────────────
   {
@@ -343,20 +296,6 @@ const menuConfig = [
     ],
   },
 
-  // ── Inventory ──────────────────────────────────────────────────
-  {
-    key: 'inventory',
-    label: 'Inventory',
-    icon: <InboxOutlined />,
-    permission: 'inventory',
-    children: [
-      { key: '/inventory/warehouses',  label: 'Warehouses',  icon: <FolderOutlined />,      permission: 'inventory.warehouses' },
-      { key: '/inventory/properties',  label: 'Properties',  icon: <ProfileOutlined />,     permission: 'inventory.properties' },
-      { key: '/inventory/categories',  label: 'Categories',  icon: <TagsOutlined />,        permission: 'inventory.categories' },
-      { key: '/inventory/inventories', label: 'Inventories', icon: <InboxOutlined />,       permission: 'inventory.inventories' },
-      { key: '/inventory/orders',      label: 'Orders',      icon: <OrderedListOutlined />, permission: 'inventory.orders' },
-    ],
-  },
 
   // ── Fraud Prevention ───────────────────────────────────────────
   {
@@ -385,17 +324,7 @@ const menuConfig = [
     ],
   },
 
-  // ── Integration ────────────────────────────────────────────────
-  {
-    key: 'integration',
-    label: 'Integration',
-    icon: <ApiOutlined />,
-    permission: 'integration',
-    children: [
-      { key: '/integration/standalone-processes', label: 'Standalone processes', icon: <DatabaseOutlined />, permission: 'integration.standalone_processes' },
-    ],
-  },
-
+ 
   // ── Administration ─────────────────────────────────────────────
   {
     key: 'administration',
@@ -426,11 +355,10 @@ const menuConfig = [
       { key: '/configuration/cycles',        label: 'Cycles',        icon: <SyncOutlined />,           permission: 'configuration.cycles' },
       { key: '/configuration/rates',         label: 'Rates',         icon: <RiseOutlined />,           permission: 'configuration.rates' },
       { key: '/configuration/card-types',    label: 'Card types',    icon: <CreditCardOutlined />,     permission: 'configuration.card_types' },
-      { key: '/configuration/servicing',     label: 'Servicing',     icon: <CustomerServiceOutlined />, permission: 'configuration.servicing' },
       { key: '/configuration/notification',  label: 'Notification',  icon: <BellOutlined />,           permission: 'configuration.notification' },
       { key: '/configuration/reporting',     label: 'Reporting',     icon: <BarChartOutlined />,       permission: 'configuration.reporting' },
       { key: '/configuration/scoring',       label: 'Scoring',       icon: <FundOutlined />,           permission: 'configuration.scoring' },
-      { key: '/configuration/arrays',        label: 'Arrays',        icon: <UnorderedListOutlined />,  permission: 'configuration.arrays' },
+      { key: '/configuration/database-connections', label: 'Database Connections', icon: <DatabaseOutlined />, permission: 'configuration.database_connections' },
       {
         key: 'configuration-directory',
         label: 'Directory',

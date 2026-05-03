@@ -1,5 +1,24 @@
 services:
 
+  jpos-cms-db:
+    image: postgres:15.3
+    container_name: jpos-cms-db
+    environment:
+      POSTGRES_USER: cms_user
+      POSTGRES_PASSWORD: cms_pass
+      POSTGRES_DB: jpos-cms-auth
+    volumes:
+      - jpos-cms-db-data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - jpos-cms-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cms_user -d jpos-cms-auth"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   jpos-cms-backend:
     build:
       context: .
@@ -8,11 +27,14 @@ services:
     env_file:
       - ./backend/.env
     environment:
-      DATABASE_URL: sqlite:////app/jpos_cms.db
+      DATABASE_URL: postgresql://cms_user:cms_pass@jpos-cms-db:5432/jpos-cms-auth
     volumes:
       - ./backend:/app
     ports:
       - "8002:8000"
+    depends_on:
+      jpos-cms-db:
+        condition: service_healthy
     networks:
       - jpos-cms-net
   
@@ -34,7 +56,7 @@ services:
       - jpos-cms-net
 
 volumes:
-  postgres-data:
+  jpos-cms-db-data:
 
 networks:
   jpos-cms-net:

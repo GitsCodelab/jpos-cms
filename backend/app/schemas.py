@@ -509,3 +509,75 @@ class LoginAuditResponse(BaseModel):
     class Config:
         from_attributes = True
 
+
+# ============================================================================
+# DATABASE CONNECTIONS SCHEMAS
+# ============================================================================
+
+from app.models import DatabaseConnectionType
+
+
+class DatabaseConnectionCreate(BaseModel):
+    """Create a new database connection"""
+    connection_name: str = Field(..., min_length=1, max_length=100)
+    database_type: DatabaseConnectionType
+    host: str = Field(..., min_length=1, max_length=255)
+    port: int = Field(..., gt=0, le=65535)
+    service_name: str = Field(..., min_length=1, max_length=100)
+    username: str = Field(..., min_length=1, max_length=100)
+    password: str = Field(..., min_length=1)
+    schema_name: Optional[str] = Field(None, max_length=100)
+    description: Optional[str] = None
+    is_active: bool = True
+
+
+class DatabaseConnectionUpdate(BaseModel):
+    """Update an existing database connection (all fields optional)"""
+    connection_name: Optional[str] = Field(None, min_length=1, max_length=100)
+    database_type: Optional[DatabaseConnectionType] = None
+    host: Optional[str] = Field(None, min_length=1, max_length=255)
+    port: Optional[int] = Field(None, gt=0, le=65535)
+    service_name: Optional[str] = Field(None, min_length=1, max_length=100)
+    username: Optional[str] = Field(None, min_length=1, max_length=100)
+    password: Optional[str] = Field(None, min_length=1)
+    schema_name: Optional[str] = Field(None, max_length=100)
+    description: Optional[str] = None
+    is_active: Optional[bool] = None
+
+
+class DatabaseConnectionResponse(BaseModel):
+    """Database connection response — password is never returned"""
+    id: str
+    connection_name: str
+    database_type: DatabaseConnectionType
+    host: str
+    port: int
+    service_name: str
+    username: str
+    schema_name: Optional[str] = None
+    description: Optional[str] = None
+    is_active: bool
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+
+
+class DatabaseConnectionTestResponse(BaseModel):
+    """Result of a connection test"""
+    connection_id: str
+    success: bool
+    message: str
+    latency_ms: Optional[float] = None
+
+
+class PaginatedDatabaseConnections(BaseModel):
+    """Paginated list of database connections"""
+    items: List[DatabaseConnectionResponse]
+    total: int
+    page: int
+    page_size: int
+    pages: int
+
+

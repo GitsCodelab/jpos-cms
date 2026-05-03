@@ -125,7 +125,7 @@ export default function MainLayout({ onLogout }) {
       </Header>
 
       {/* ── Body: Sidebar + Content ─────────────────────────────── */}
-      <Layout style={{ height: 'calc(100vh - 44px)' }}>
+      <Layout style={{ height: 'calc(100vh - 44px)', minHeight: 0 }}>
         <Sidebar collapsed={sidebarCollapsed} onCollapse={setSidebarCollapsed} />
 
         <Content

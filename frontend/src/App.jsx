@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import Login from './pages/Login'
 import MainLayout from './components/MainLayout'
 import PlaceholderPage from './pages/PlaceholderPage'
+import DatabaseConnections from './pages/DatabaseConnections'
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('access_token'))
@@ -31,6 +32,9 @@ export default function App() {
       <Route path="/" element={<MainLayout onLogout={handleLogout} />}>
         {/* Default redirect to Monitoring › Notifications */}
         <Route index element={<Navigate to="/monitoring/notifications" replace />} />
+
+        {/* Configuration — Database Connections */}
+        <Route path="configuration/database-connections" element={<DatabaseConnections />} />
 
         {/* All sections render the placeholder until each page is implemented */}
         <Route path="*" element={<PlaceholderPage />} />

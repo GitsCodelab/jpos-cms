@@ -183,6 +183,7 @@ export default function Sidebar({ collapsed, onCollapse }) {
         background: '#ffffff',
         borderRight: '1px solid #d8dce6',
         height: '100%',
+        minHeight: 0,
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
@@ -226,20 +227,30 @@ export default function Sidebar({ collapsed, onCollapse }) {
       )}
 
       {/* ── Scrollable body ──────────────────────────────────── */}
-      <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
+      <div
+        style={{
+          flex: 1,
+          minHeight: 0,
+          overflow: 'hidden',
+          overflowX: 'hidden',
+          WebkitOverflowScrolling: 'touch',
+        }}
+      >
 
         {/* Menu tab — also shown when collapsed (icon-only) */}
         {(activeTab === 'menu' || collapsed) && (
-          <Menu
-            mode="inline"
-            selectedKeys={[selectedKey]}
-            openKeys={collapsed ? [] : openKeys}
-            onOpenChange={handleOpenChange}
-            items={collapsed ? collapsedMenuItems : menuItems}
-            onSelect={handleMenuSelect}
-            inlineCollapsed={collapsed}
-            style={{ border: 'none' }}
-          />
+          <div style={{ height: '100%', minHeight: 0, overflowY: 'auto', overflowX: 'hidden', paddingBottom: 8 }}>
+            <Menu
+              mode="inline"
+              selectedKeys={[selectedKey]}
+              openKeys={collapsed ? [] : openKeys}
+              onOpenChange={handleOpenChange}
+              items={collapsed ? collapsedMenuItems : menuItems}
+              onSelect={handleMenuSelect}
+              inlineCollapsed={collapsed}
+              style={{ border: 'none' }}
+            />
+          </div>
         )}
 
         {/* Bookmarks tab */}

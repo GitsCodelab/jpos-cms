@@ -35,4 +35,15 @@ export const authAPI = {
   revokeAllSessions: () => api.post('/auth/revoke-all-sessions'),
 }
 
+export const dbConnectionAPI = {
+  list: (params) => api.get('/config/database-connections', { params }),
+  get: (id) => api.get(`/config/database-connections/${id}`),
+  create: (data) => api.post('/config/database-connections', data),
+  update: (id, data) => api.put(`/config/database-connections/${id}`, data),
+  delete: (id) => api.delete(`/config/database-connections/${id}`),
+  test: (id) => api.post(`/config/database-connections/${id}/test`),
+  activate: (id, is_active) =>
+    api.post(`/config/database-connections/${id}/activate`, null, { params: { is_active } }),
+}
+
 export default api
